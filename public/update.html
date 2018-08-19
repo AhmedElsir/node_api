@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Update a user</title>
+</head>
+<body>
+    <!-- user form -->
+    <form name="userUpdateForm" onsubmit="return validateForm()" action="/users/authenticate" method="post">
+        <h2>Before you update please enter you old username and password correctly</h2>
+        
+        Old Name: <input type="text" name="old_name"><br><br>
+        Old Password: <input type="password" name="old_password"><br><br><br><br>
+
+        <h3>chose the field yu want to update</h3>
+        New Name: <input type="text" name="new_name"><br><br>
+        New Email: <input type="text" name="new_email"><br><br>
+        New Mobile: <input type="text" name="new_mobile"><br><br>
+        New Password: <input type="password" name="new_password"><br><br><br><br>
+        <input type="submit" value="Update">
+    </form>
+    
+    <!-- validate the form input -->
+    <script>
+        function validateForm(){
+            var name =  document.forms['userForm']['name'].value;
+            var email =  document.forms['userForm']['email'].value;
+            var mobile =  document.forms['userForm']['mobile'].value;
+            var password =  document.forms['userForm']['password'].value;
+            
+            if(new_mobile === ""){
+
+            }
+            else if(new_mobile.length !== 14){
+                alert("Please enter a valid Phone number");
+                return false;
+            }
+            else if(new_mobile.substring(0,5) !== "00249"){
+                alert("Please enter Sudanese Phone start with 00249");
+                return false;
+            } 
+            if(new_email === ""){
+
+            }
+            else if(!new_email.includes("@") || !new_email.includes(".")){
+                alert("Please enter a valid Email address");
+                return false;
+            }
+            if(old_name === "" || old_password === ""){
+                alert("The Old Username and Password are requied");
+            }
+            return true;
+        }
+    </script>
+   
+
+
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+    "name": "node-api",
+    "main": "server.js",
+    "dependencies": {
+        "body-parser": "*",
+        "express": "*",
+        "jwt-simple": "*",
+        "mongoose": "*",
+        "mongoose-unique-validator": "^2.0.1",
+        "nodemon": "*"
+    }
+}

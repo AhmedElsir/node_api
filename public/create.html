@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Create a user</title>
+</head>
+<body>
+    <!-- user form -->
+    <form name="userForm" onsubmit="return validateForm()" action="/users/create" method="post">
+        Name: <input type="text" name="name"><br><br>
+        Email: <input type="text" name="email"><br><br>
+        Mobile: <input type="text" name="mobile"><br><br>
+        Password: <input type="password" name="password"><br><br><br><br>
+        <input type="submit" value="Create">
+    </form>
+    
+    <!-- validate the form input -->
+    <script>
+        function validateForm(){
+            var name =  document.forms['userForm']['name'].value;
+            var email =  document.forms['userForm']['email'].value;
+            var mobile =  document.forms['userForm']['mobile'].value;
+            var password =  document.forms['userForm']['password'].value;
+            if(mobile.substring(0,5) !== "00249"){
+                alert("Please enter Sudanese Phone start with 00249");
+                return false;
+            }
+            if(mobile.length !== 14){
+                alert("Please enter a valid Phone number");
+                return false;
+            }
+            if(!email.includes("@") || !email.includes(".")){
+                alert("Please enter a valid Email address");
+                return false;
+            }
+            if(name, email, mobile, password === ""){
+                alert("You can't leave a field empty");
+                return false;
+            }
+            return true;
+        }
+    </script>
+   
+
+
+
+</body>
+</html>
