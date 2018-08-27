@@ -103,11 +103,11 @@ router.route('/read/:user_id')
     User.findById(req.params.user_id, (err, user) => {
       if (err) { res.send(err); }
 
-      decode_pass = jwt.decode(user.token, user.name);
+      const decodePass = jwt.decode(user.token, user.name);
       res.render('user_id', {
         title: user.name,
         user,
-        pass: decode_pass,
+        pass: decodePass,
       });
     });
   });
@@ -123,7 +123,7 @@ router.route('/update/:user_id')
 router.route('/authenticate')
   .post((req, res) => {
     // find a user by it's token not an id
-    genToken = jwt.encode(req.body.old_name, req.body.old_password);
+    const genToken = jwt.encode(req.body.old_name, req.body.old_password);
     User.findOne({ token: genToken }, (err, user) => {
       if (err) { res.send(err); }
 
@@ -143,8 +143,8 @@ router.route('/authenticate')
         }
       }
 
-      user.save((err) => {
-        if (err) throw err;
+      user.save((saveErr) => {
+        if (saveErr) throw saveErr;
       });
       res.json({ message: 'User succesfuly updated' });
     });
