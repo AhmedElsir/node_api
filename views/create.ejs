@@ -1,0 +1,68 @@
+<%- include('start/up') %>
+<div class="container">
+    <!-- user form -->
+    <br><br>
+    <form name="userForm" onsubmit="return validateForm()" action="/users/create" method="post" style="text-align: center">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">Name</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" name="name">
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">Email</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Email" aria-label="Username" aria-describedby="basic-addon1" name="email">
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">Mobile</span>
+            </div>
+            <input type="text" class="form-control" placeholder="00249-" aria-label="Username" aria-describedby="basic-addon1" name="mobile">
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">Password</span>
+            </div>
+            <input type="password" class="form-control" placeholder="" aria-label="Username" aria-describedby="basic-addon1" name="password">
+        </div>
+        
+        <fieldset><input type="submit" value="Create"></fieldset>
+    </form>
+
+
+<!-- the end of the container-->
+</div>
+    
+    <!-- validate the form input -->
+    <script>
+        function validateForm(){
+            var name =  document.forms['userForm']['name'].value;
+            var email =  document.forms['userForm']['email'].value;
+            var mobile =  document.forms['userForm']['mobile'].value;
+            var password =  document.forms['userForm']['password'].value;
+            if(mobile.substring(0,5) !== "00249"){
+                alert("Please enter Sudanese Phone start with 00249");
+                return false;
+            }
+            if(mobile.length !== 14){
+                alert("Please enter a valid Phone number");
+                return false;
+            }
+            if(!email.includes("@") || !email.includes(".")){
+                alert("Please enter a valid Email address");
+                return false;
+            }
+            if(name, email, mobile, password === ""){
+                alert("You can't leave a field empty");
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+<%- include('start/down') %>

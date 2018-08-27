@@ -1,0 +1,26 @@
+<%- include('start/up') %>
+<div class="container">
+    <br> <br>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">#id</th>
+            <th scope="col">Full Name</th>
+            <th scope="col">Mobile</th>
+            <th scope="col">Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for(var user of users) { %>
+        <tr>
+            <th scope="row"><%= user._id %></th>
+            <td><%= user.name %></td>
+            <td><%= user.phone_num %></td>
+            <td><%= user.email %></td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('start/down') %>
