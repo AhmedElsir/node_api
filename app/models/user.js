@@ -2,27 +2,29 @@ const mongoose = require('mongoose');
 const uniqueValitator = require('mongoose-unique-validator');
 
 const { Schema } = mongoose;
-const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 
 
 const UserSchema = new Schema({
   name: { type: String, required: true, unique: true },
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   phone_num: { type: String, required: true, unique: true },
-  hash: String,
-  salt: String,
+  hash: { type: String },
+  salt: { type: String },
 });
 
-UserSchema.methods.setPassword = function (password) {
-  this.salt = crypto.randomBytes(16).toString('hex');
-  this.hash = crypto.pbkdf2Sync(password, this.salt, 10, 32, 'ahmed').toString('hex');
+UserSchema.methods.setPassword = function setPassword(password) {
+  bcrypt.hash(password, 10, (err, hash) => {
+    this.hash = hash;
+  });
 };
 
-UserSchema.methods.validPassword = function (password) {
-  const hash = crypto.pbkdf2Sync(password, this.salt, 10, 32, 'ahmed').toString('hex');
-  return this.hash === hash;
-};
 
+UserSchema.methods.validPassword = function validPassword(password) {
+  bcrypt.compare(password, this.hash, (err, res) => {
+    if (res) { return true; } return false;
+  });
+};
 
 UserSchema.plugin(uniqueValitator);
 module.exports = mongoose.model('User', UserSchema);

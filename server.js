@@ -14,12 +14,13 @@ const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
 
-const jwt = require('jwt-simple');
-
 const path = require('path');
 
+const bcrypt = require('bcrypt');
+
+
 // connect with mongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/userdb', { useNewUrlParser: true });
+mongoose.connect('mongodb://127.0.0.1:27017/usersdb', { useNewUrlParser: true });
 
 // check our connection
 const { connection } = mongoose;
@@ -60,14 +61,13 @@ router.use((req, res, next) => {
 router.route('/create')
 
   .post((req, res) => {
-    // create a user (accessed at POST http://localhost:8080/user/create)
+    // create a user (accessed at POST http://localhost:8080/users/create)
     const user = new User();
     user.name = req.body.name;
     user.email = req.body.email;
     user.phone_num = req.body.mobile;
-    const userToken = jwt.encode(user.name, req.body.password);
-    user.token = userToken;
-
+    user.password = req.body.password;
+    
     user.save((err) => {
       if (err) { res.send((err)); }
 
@@ -85,15 +85,15 @@ router.route('/create')
 // read all the user on the database
 router.route('/read')
   .get((req, res) => {
-    User.find({}, ['name', '__id', 'phone_num', 'email'], (err, users) => {
-      if (err) { res.send(err); }
-      // display only the user name and the id
-
-      res.render('read', {
-        title: 'All Users',
-        users,
-      });
-    });
+    User.find()
+      .then((users) => {
+        console.log(users);
+        res.render('read', {
+          title: 'All Users',
+          users,
+        });
+      })
+      .catch((err) => { res.json(err); });
   });
 
 
@@ -103,11 +103,9 @@ router.route('/read/:user_id')
     User.findById(req.params.user_id, (err, user) => {
       if (err) { res.send(err); }
 
-      const decodePass = jwt.decode(user.token, user.name);
       res.render('user_id', {
         title: user.name,
         user,
-        pass: decodePass,
       });
     });
   });
@@ -123,25 +121,20 @@ router.route('/update/:user_id')
 router.route('/authenticate')
   .post((req, res) => {
     // find a user by it's token not an id
-    const genToken = jwt.encode(req.body.old_name, req.body.old_password);
-    User.findOne({ token: genToken }, (err, user) => {
-      if (err) { res.send(err); }
+    User.findOne({ name: req.body.old_name }, (err, user) => {
+      if (err) { res.send(err); } else if (user.validPassword(req.body.old_password)) {
+        // update the user information after we check it
+        if (req.body.new_name !== '') { user.name = req.body.new_name; }
 
-      // update the user information after we check it
-      if (req.body.new_name !== '') { user.name = req.body.new_name; }
+        if (req.body.new_email !== '') { user.email = req.body.new_email; }
 
-      if (req.body.new_email !== '') { user.email = req.body.new_email; }
+        if (req.body.new_mobile !== '') { user.mobile = req.body.new_mobile; }
 
-      if (req.body.new_mobile !== '') { user.mobile = req.body.new_mobile; }
-
-      if (req.body.new_password !== '') {
-        // if we use a new name and password gnerate a new token
-        if (req.body.new_name !== '') {
-          user.token = jwt.encode(req.body.new_name, req.body.new_password);
-        } else {
-          user.token = jwt.encode(req.body.old_name, req.body.new_password);
-        }
+        if (req.body.new_password !== '') { user.setPassword(req.body.new_password); }
+      } else {
+        res.json({ message: 'wrong password, please re-enter your old password' });
       }
+
 
       user.save((saveErr) => {
         if (saveErr) throw saveErr;
