@@ -16,8 +16,6 @@ const mongoose = require('mongoose');
 
 const path = require('path');
 
-const bcrypt = require('bcrypt');
-
 
 // connect with mongoDB
 mongoose.connect('mongodb://127.0.0.1:27017/usersdb', { useNewUrlParser: true });
@@ -66,11 +64,9 @@ router.route('/create')
     user.name = req.body.name;
     user.email = req.body.email;
     user.phone_num = req.body.mobile;
-    user.password = req.body.password;
-    
+    user.setPassword(req.body.password);
     user.save((err) => {
       if (err) { res.send((err)); }
-
       res.render('user_create', {
         title: 'Bravo',
       });
