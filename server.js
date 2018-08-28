@@ -110,7 +110,7 @@ router.route('/read/:user_id')
 router.route('/update/:user_id')
 
   .get((req, res) => {
-    res.sendFile(`${__dirname}/public/update.html`);
+    res.render('update', { title: 'Update the User' });
   });
 
 // authenticate the user before it can update
@@ -124,7 +124,7 @@ router.route('/authenticate')
 
         if (req.body.new_email !== '') { user.email = req.body.new_email; }
 
-        if (req.body.new_mobile !== '') { user.mobile = req.body.new_mobile; }
+        if (req.body.new_mobile !== '') { user.phone_num = req.body.new_mobile; }
 
         if (req.body.new_password !== '') { user.setPassword(req.body.new_password); }
       } else {
@@ -138,8 +138,6 @@ router.route('/authenticate')
       res.json({ message: 'User succesfuly updated' });
     });
   });
-
-
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', (req, res) => {
   res.render('index');
